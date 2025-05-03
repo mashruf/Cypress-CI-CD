@@ -8,34 +8,32 @@ on:
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-latest  # Use GitHub-hosted Ubuntu runner
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository code
-      - name: Checkout code
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js (version 18)
-      - name: Setup Node
+      - name: 🟢 Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Step 3: Install project dependencies
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      # Step 4: Run Cypress tests in headless mode using Chrome
-      - name: Run Cypress tests
+      - name: 🌐 Start app (optional)
+        run: npm run start & # Adjust if needed
+        env:
+          NODE_ENV: test
+        # If app needs time to start:
+        # run: sleep 10 && npm run start &
+
+      - name: 🧪 Run Cypress tests
         run: npx cypress run --browser chrome
 
-      # (Optional) Debug: List report directory contents
-      - name: List report directory
-        run: ls -R cypress/reports || echo "Report directory not found"
-
-      # Step 5: Upload test report artifact
-      - name: Upload test report artifact
-        if: always()  # Run even if tests fail
+      - name: 📁 Upload test report artifact
+        if: always()  # Always run this step even if tests fail
         uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
