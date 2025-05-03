@@ -18,7 +18,7 @@ jobs:
           browser: chrome
         env:
           # Optional: you can pass environment variables here
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_RECORD_KEY: ${ secrets.CYPRESS_RECORD_KEY }
 
       # Step 3: List report directory (optional debug)
       - name: Debug report directory
