@@ -1,39 +1,32 @@
-name: E2E Tests
+name: End-to-end tests
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+on: push
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - name: ⬇️ Checkout code
-        uses: actions/checkout@v3
+      # Step 1: Checkout the repo
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node
-        uses: actions/setup-node@v3
+      # Step 2: Run Cypress tests using the official GitHub Action
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
         with:
-          node-version: 18
-
-      - name: 📦 Install dependencies
-        run: npm ci
-
-      - name: 🌐 Start app (optional)
-        run: npm run start & # Adjust if needed
+          browser: chrome
         env:
-          NODE_ENV: test
-        # If app needs time to start:
-        # run: sleep 10 && npm run start &
+          # Optional: you can pass environment variables here
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
-      - name: 🧪 Run Cypress tests
-        run: npx cypress run --browser chrome
+      # Step 3: List report directory (optional debug)
+      - name: Debug report directory
+        run: ls -R cypress/reports || echo "No report directory found"
 
-      - name: 📁 Upload test report artifact
-        if: always()  # Always run this step even if tests fail
+      # Step 4: Upload Mochawesome report and screenshots (if any)
+      - name: Upload Mochawesome report
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
