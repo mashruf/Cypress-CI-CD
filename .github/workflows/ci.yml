@@ -1,33 +1,12 @@
 name: End-to-end tests
-
 on: push
-
 jobs:
   cypress-run:
     runs-on: ubuntu-24.04
-
     steps:
-      # Step 1: Checkout the repo
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Step 2: Run Cypress tests using the official GitHub Action
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          browser: chrome
-        env:
-          # Optional: you can pass environment variables here
-          CYPRESS_RECORD_KEY: ${ secrets.CYPRESS_RECORD_KEY }
-
-      # Step 3: List report directory (optional debug)
-      - name: Debug report directory
-        run: ls -R cypress/reports || echo "No report directory found"
-
-      # Step 4: Upload Mochawesome report and screenshots (if any)
-      - name: Upload Mochawesome report
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: mochawesome-report
-          path: cypress/reports/
