@@ -2,21 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/your-username/your-repo.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+                bat 'npm install'
             }
         }
 
         stage('Run Cypress Tests & Generate Report') {
             steps {
-                sh '''
+                bat '''
                     npx cypress run
                     npx mochawesome-merge report/html/*.json > report/mochawesome.json
                     npx marge report/mochawesome.json --reportDir report/html --inline
